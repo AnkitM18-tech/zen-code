@@ -72,6 +72,7 @@ async function Header() {
             <ThemeSelector />
             <LanguageSelector hasAccess={Boolean(convexUser?.isPro)} />
           </div>
+
           {!convexUser?.isPro && (
             <Link
               href="/pricing"
