@@ -3,6 +3,7 @@
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import useMounted from "@/hooks/useMounted";
 import { THEMES } from "../_constants";
 import {
   CircleOff,
@@ -24,7 +25,7 @@ const THEME_ICONS: Record<string, React.ReactNode> = {
 
 function ThemeSelector() {
   const [isOpen, setisOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const { theme, setTheme } = useCodeEditorStore();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const currentTheme = THEMES.find((t) => t.id === theme);
@@ -40,10 +41,6 @@ function ThemeSelector() {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    setMounted(true);
   }, []);
 
   if (!mounted) return null;
