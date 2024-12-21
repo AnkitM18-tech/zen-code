@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "react-hot-toast";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -34,6 +35,7 @@ export default function RootLayout({
         >
           <ConvexClientProvider>{children}</ConvexClientProvider>
           <Footer />
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
