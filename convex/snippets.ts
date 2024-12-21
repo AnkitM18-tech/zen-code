@@ -67,6 +67,33 @@ export const deleteSnippet = mutation({
   },
 });
 
+export const starSnippet = mutation({
+  args: { snippetId: v.id("snippets") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Not authenticated");
+
+    const starExisting = await ctx.db
+      .query("stars")
+      .withIndex("by_user_id_and_snippet_id")
+      .filter(
+        (s) =>
+          s.eq(s.field("userId"), identity.subject) &&
+          s.eq(s.field("snippetId"), args.snippetId)
+      )
+      .first();
+
+    if (starExisting) {
+      await ctx.db.delete(starExisting._id);
+    } else {
+      await ctx.db.insert("stars", {
+        userId: identity.subject,
+        snippetId: args.snippetId,
+      });
+    }
+  },
+});
+
 export const getSnippets = query({
   handler: async (ctx) => {
     const snippets = await ctx.db.query("snippets").order("desc").collect();
