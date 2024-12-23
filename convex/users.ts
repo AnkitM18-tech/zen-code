@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 export const syncUser = mutation({
@@ -43,5 +43,33 @@ export const getUser = query({
     }
 
     return user;
+  },
+});
+
+export const upgradeToPro = mutation({
+  args: {
+    email: v.string(),
+    lemonSqueezyCustomerId: v.string(),
+    lemonSqueezyOrderId: v.string(),
+    amount: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .filter((u) => u.eq(u.field("email"), args.email))
+      .first();
+
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
+
+    await ctx.db.patch(user._id, {
+      isPro: true,
+      proSince: Date.now(),
+      lemonSqueezyCustomerId: args.lemonSqueezyCustomerId,
+      lemonSqueezyOrderId: args.lemonSqueezyOrderId,
+    });
+
+    return { success: true };
   },
 });
