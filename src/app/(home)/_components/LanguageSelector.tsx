@@ -8,7 +8,7 @@ import Image from "next/image";
 import { ChevronDownIcon, Lock, Sparkles } from "lucide-react";
 import useMounted from "@/hooks/useMounted";
 
-function LanguageSelector({ hasAccess }: { hasAccess: Boolean }) {
+function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const mounted = useMounted();
   const dropdownRef = useRef<HTMLDivElement>(null);
