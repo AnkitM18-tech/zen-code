@@ -182,7 +182,7 @@ function SnippetsPage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Edge Case: Empty State */}
+        {/* Edge Case: Empty State of Filtered Snippets */}
         {filteredSnippets.length === 0 && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
