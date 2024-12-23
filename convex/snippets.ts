@@ -202,3 +202,22 @@ export const getSnippetStarCount = query({
     return stars.length;
   },
 });
+
+export const getStarredSnippets = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const stars = await ctx.db
+      .query("stars")
+      .withIndex("by_user_id")
+      .filter((u) => u.eq(u.field("userId"), identity.subject))
+      .collect();
+
+    const snippets = await Promise.all(
+      stars.map((star) => ctx.db.get(star.snippetId))
+    );
+
+    return snippets.filter((snippet) => snippet !== null);
+  },
+});
